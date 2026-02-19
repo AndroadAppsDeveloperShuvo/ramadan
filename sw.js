@@ -3,9 +3,10 @@ const assets = [
   './',
   './index.html',
   './manifest.json',
-  './icon.png' // আপনার লোগোর নাম যদি icon.png হয়
+  './icon.png'
 ];
 
+// ইনস্টল এবং ক্যাশ করা
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(cacheName).then(cache => {
@@ -14,6 +15,7 @@ self.addEventListener('install', e => {
   );
 });
 
+// অফলাইনে চালানো
 self.addEventListener('fetch', e => {
   e.respondWith(
     caches.match(e.request).then(res => {
