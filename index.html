@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <link rel="manifest" href="manifest.json">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="রমজান ২০২৬">
-<link rel="apple-touch-icon" href="https://i.ibb.co/tTbMdYQH/10776.avif">
-
-<meta name="theme-color" content="#00897b">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>রমজান সময়সূচি ২০২৬ - নাটোর</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00897b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="রমজান ২০২৬">
+    <link rel="apple-touch-icon" href="icon.png">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         :root {
             --primary-color: #00897b;
@@ -48,6 +48,7 @@
             position: relative;
         }
 
+        /* Three Dot Menu */
         .menu-container {
             position: absolute;
             top: 15px;
@@ -62,6 +63,7 @@
             cursor: pointer;
             padding: 8px 12px;
             border-radius: 50%;
+            z-index: 1001;
         }
 
         .dropdown-menu {
@@ -76,6 +78,12 @@
             z-index: 1000;
             padding: 20px;
             text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .dropdown-menu img {
@@ -98,6 +106,7 @@
             text-align: left;
         }
 
+        /* Table Style */
         .table-wrapper {
             overflow-x: auto;
             padding: 5px;
@@ -125,7 +134,7 @@
             color: #333;
         }
 
-        /* অটো হাইলাইট ক্লাস */
+        /* প্রতিদিনের পুরো সারি হাইলাইট */
         .active-today {
             background-color: var(--active-row-bg) !important;
             border-left: 6px solid var(--active-row-border);
@@ -151,6 +160,7 @@
             text-align: center;
             font-size: 14px;
             color: #777;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
@@ -164,7 +174,7 @@
             </button>
             <div id="myDropdown" class="dropdown-menu">
                 <img src="https://i.ibb.co/tTbMdYQH/10776.avif" alt="Developer Shuvo">
-                <h4 style="font-size: 20px; color: #666; margin: 0;">Developer Shuvo</h4>
+                <h4 style="margin: 5px 0;">Developer Shuvo</h4>
                 <p style="font-size: 14px; color: #666; margin: 0;">Expert Web Developer</p>
                 <div class="note-section">
                     <strong>বিশেষ দ্রষ্টব্য:</strong> ২/৪ মিনিট ভুল হতে পারে, ভুল হলে ক্ষমার দৃষ্টিতে দেখবেন।
@@ -172,7 +182,7 @@
             </div>
         </div>
         <h2 style="margin: 0; font-size: 24px;">রমজান সময়সূচি ২০২৬</h2>
-        <p style="margin: 8px 0 0 0; opacity: 0.9;">নাটোর জেলা (ঢাকার সময়ের সাথে +৫ মিনিট)</p>
+        <p style="margin: 8px 0 0 0; opacity: 0.9;">নাটোর জেলা (ঢাকার সময় +৫ মিনিট)</p>
     </header>
 
     <div class="table-wrapper">
@@ -227,11 +237,13 @@
 </div>
 
 <script>
+    // থ্রি-ডট মেনু কন্ট্রোল
     function toggleMenu(e) {
         e.stopPropagation();
         document.getElementById("myDropdown").classList.toggle("show");
     }
 
+    // অটো হাইলাইট ফাংশন
     function autoHighlightToday() {
         const rows = document.querySelectorAll('#ramadanTable tbody tr');
         const today = new Date();
@@ -250,27 +262,24 @@
         });
     }
 
+    // পেজ লোড হলে কাজ করবে
     window.addEventListener('DOMContentLoaded', autoHighlightToday);
 
+    // বাইরে ক্লিক করলে মেনু বন্ধ হবে
     window.addEventListener('click', function() {
         const menu = document.getElementById("myDropdown");
         if (menu && menu.classList.contains('show')) {
             menu.classList.remove('show');
         }
     });
-</script>
-    <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-      console.log('Service Worker Registered!');
-    }).catch(err => {
-      console.log('Registration failed!', err);
-    });
-  });
-}
-</script>
 
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js');
+        });
+    }
+</script>
 
 </body>
 </html>
