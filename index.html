@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রমজান সময়সূচি ২০২৬ - নাটোর</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00897b;
+            --secondary-color: #2c3e50;
+            --bg-color: #f4f7f6;
+            --active-row-bg: #c8e6c9; /* হাইলাইট রঙ */
+            --active-row-border: #2e7d32;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0;
+            padding: 10px;
+        }
+
+        .calendar-container { 
+            max-width: 600px; 
+            margin: 10px auto; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        header {
+            background: linear-gradient(135deg, #00897b, #004d40);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .menu-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .dots-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 50%;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 55px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            width: 260px;
+            z-index: 1000;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .dropdown-menu img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .note-section {
+            background: #fff9c4;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #fbc02d;
+            font-size: 13px;
+            color: #5d4037;
+            text-align: left;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 5px;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            min-width: 450px;
+        }
+
+        th { 
+            background-color: #f8faf9; 
+            color: #444; 
+            padding: 15px 10px;
+            border-bottom: 2px solid #ddd;
+            font-size: 15px;
+        }
+
+        td { 
+            padding: 12px 10px; 
+            text-align: center; 
+            border-bottom: 1px solid #eee;
+            font-size: 15px;
+            color: #333;
+        }
+
+        /* অটো হাইলাইট ক্লাস */
+        .active-today {
+            background-color: var(--active-row-bg) !important;
+            border-left: 6px solid var(--active-row-border);
+            font-weight: bold;
+        }
+
+        .ramadan-no {
+            background: var(--secondary-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            display: inline-block;
+            line-height: 28px;
+            border-radius: 50%;
+            font-size: 13px;
+        }
+
+        .show { display: block !important; }
+
+        footer {
+            background: #fdfdfd;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calendar-container">
+    <header>
+        <div class="menu-container">
+            <button class="dots-btn" onclick="toggleMenu(event)">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div id="myDropdown" class="dropdown-menu">
+                <img src="https://i.ibb.co/tTbMdYQH/10776.avif" alt="Developer Shuvo">
+                <h4 style="font-size: 20px; color: #666; margin: 0;">Developer Shuvo</h4>
+                <p style="font-size: 14px; color: #666; margin: 0;">Expert Web Developer</p>
+                <div class="note-section">
+                    <strong>বিশেষ দ্রষ্টব্য:</strong> ২/৪ মিনিট ভুল হতে পারে, ভুল হলে ক্ষমার দৃষ্টিতে দেখবেন।
+                </div>
+            </div>
+        </div>
+        <h2 style="margin: 0; font-size: 24px;">রমজান সময়সূচি ২০২৬</h2>
+        <p style="margin: 8px 0 0 0; opacity: 0.9;">নাটোর জেলা (ঢাকার সময়ের সাথে +৫ মিনিট)</p>
+    </header>
+
+    <div class="table-wrapper">
+        <table id="ramadanTable">
+            <thead>
+                <tr>
+                    <th>রমজান</th>
+                    <th>তারিখ</th>
+                    <th>বার</th>
+                    <th>সেহরি</th>
+                    <th>ইফতার</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-date="2026-02-19"><td><span class="ramadan-no">১</span></td><td>১৯ ফেব্রুয়ারি</td><td>বৃহস্পতিবার</td><td>৫:১৭</td><td>৬:০৫</td></tr>
+                <tr data-date="2026-02-20"><td><span class="ramadan-no">২</span></td><td>২০ ফেব্রুয়ারি</td><td>শুক্রবার</td><td>৫:১৬</td><td>৬:০৫</td></tr>
+                <tr data-date="2026-02-21"><td><span class="ramadan-no">৩</span></td><td>২১ ফেব্রুয়ারি</td><td>শনিবার</td><td>৫:১৫</td><td>৬:০৬</td></tr>
+                <tr data-date="2026-02-22"><td><span class="ramadan-no">৪</span></td><td>২২ ফেব্রুয়ারি</td><td>রবিবার</td><td>৫:১৪</td><td>৬:০৬</td></tr>
+                <tr data-date="2026-02-23"><td><span class="ramadan-no">৫</span></td><td>২৩ ফেব্রুয়ারি</td><td>সোমবার</td><td>৫:১৩</td><td>৬:০৭</td></tr>
+                <tr data-date="2026-02-24"><td><span class="ramadan-no">৬</span></td><td>২৪ ফেব্রুয়ারি</td><td>মঙ্গলবার</td><td>৫:১২</td><td>৬:০৭</td></tr>
+                <tr data-date="2026-02-25"><td><span class="ramadan-no">৭</span></td><td>২৫ ফেব্রুয়ারি</td><td>বুধবার</td><td>৫:১১</td><td>৬:০৮</td></tr>
+                <tr data-date="2026-02-26"><td><span class="ramadan-no">৮</span></td><td>২৬ ফেব্রুয়ারি</td><td>বৃহস্পতিবার</td><td>৫:১০</td><td>৬:০৮</td></tr>
+                <tr data-date="2026-02-27"><td><span class="ramadan-no">৯</span></td><td>২৭ ফেব্রুয়ারি</td><td>শুক্রবার</td><td>৫:০৯</td><td>৬:০৯</td></tr>
+                <tr data-date="2026-02-28"><td><span class="ramadan-no">১০</span></td><td>২৮ ফেব্রুয়ারি</td><td>শনিবার</td><td>৫:০৮</td><td>৬:০৯</td></tr>
+                <tr data-date="2026-03-01"><td><span class="ramadan-no">১১</span></td><td>০১ মার্চ</td><td>রবিবার</td><td>৫:০৭</td><td>৬:১০</td></tr>
+                <tr data-date="2026-03-02"><td><span class="ramadan-no">১২</span></td><td>০২ মার্চ</td><td>সোমবার</td><td>৫:০৬</td><td>৬:১০</td></tr>
+                <tr data-date="2026-03-03"><td><span class="ramadan-no">১৩</span></td><td>০৩ মার্চ</td><td>মঙ্গলবার</td><td>৫:০৫</td><td>৬:১১</td></tr>
+                <tr data-date="2026-03-04"><td><span class="ramadan-no">১৪</span></td><td>০৪ মার্চ</td><td>বুধবার</td><td>৫:০৪</td><td>৬:১১</td></tr>
+                <tr data-date="2026-03-05"><td><span class="ramadan-no">১৫</span></td><td>০৫ মার্চ</td><td>বৃহস্পতিবার</td><td>৫:০৩</td><td>৬:১২</td></tr>
+                <tr data-date="2026-03-06"><td><span class="ramadan-no">১৬</span></td><td>০৬ মার্চ</td><td>শুক্রবার</td><td>৫:০২</td><td>৬:১২</td></tr>
+                <tr data-date="2026-03-07"><td><span class="ramadan-no">১৭</span></td><td>০৭ মার্চ</td><td>শনিবার</td><td>৫:০১</td><td>৬:১৩</td></tr>
+                <tr data-date="2026-03-08"><td><span class="ramadan-no">১৮</span></td><td>০৮ মার্চ</td><td>রবিবার</td><td>৪:৫৯</td><td>৬:১৩</td></tr>
+                <tr data-date="2026-03-09"><td><span class="ramadan-no">১৯</span></td><td>০৯ মার্চ</td><td>সোমবার</td><td>৪:৫৮</td><td>৬:১৪</td></tr>
+                <tr data-date="2026-03-10"><td><span class="ramadan-no">২০</span></td><td>১০ মার্চ</td><td>মঙ্গলবার</td><td>৪:৫৭</td><td>৬:১৪</td></tr>
+                <tr data-date="2026-03-11"><td><span class="ramadan-no">২১</span></td><td>১১ মার্চ</td><td>বুধবার</td><td>৪:৫৬</td><td>৬:১৫</td></tr>
+                <tr data-date="2026-03-12"><td><span class="ramadan-no">২২</span></td><td>১২ মার্চ</td><td>বৃহস্পতিবার</td><td>৪:৫৫</td><td>৬:১৫</td></tr>
+                <tr data-date="2026-03-13"><td><span class="ramadan-no">২৩</span></td><td>১৩ মার্চ</td><td>শুক্রবার</td><td>৪:৫৩</td><td>৬:১৬</td></tr>
+                <tr data-date="2026-03-14"><td><span class="ramadan-no">২৪</span></td><td>১৪ মার্চ</td><td>শনিবার</td><td>৪:৫২</td><td>৬:১৬</td></tr>
+                <tr data-date="2026-03-15"><td><span class="ramadan-no">২৫</span></td><td>১৫ মার্চ</td><td>রবিবার</td><td>৪:৫১</td><td>৬:১৭</td></tr>
+                <tr data-date="2026-03-16"><td><span class="ramadan-no">২৬</span></td><td>১৬ মার্চ</td><td>সোমবার</td><td>৪:৫০</td><td>৬:১৭</td></tr>
+                <tr data-date="2026-03-17"><td><span class="ramadan-no">২৭</span></td><td>১৭ মার্চ</td><td>মঙ্গলবার</td><td>৪:৪৮</td><td>৬:১৮</td></tr>
+                <tr data-date="2026-03-18"><td><span class="ramadan-no">২৮</span></td><td>১৮ মার্চ</td><td>বুধবার</td><td>৪:৪৭</td><td>৬:১৮</td></tr>
+                <tr data-date="2026-03-19"><td><span class="ramadan-no">২৯</span></td><td>১৯ মার্চ</td><td>বৃহস্পতিবার</td><td>৪:৪৬</td><td>৬:১৯</td></tr>
+                <tr data-date="2026-03-20"><td><span class="ramadan-no">৩০</span></td><td>২০ মার্চ</td><td>শুক্রবার</td><td>৪:৪৫</td><td>৬:২০</td></tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <footer>
+        <p>© ২০২৬ | নাটোর রমজান ক্যালেন্ডার</p>
+    </footer>
+</div>
+
+<script>
+    function toggleMenu(e) {
+        e.stopPropagation();
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function autoHighlightToday() {
+        const rows = document.querySelectorAll('#ramadanTable tbody tr');
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const d = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${y}-${m}-${d}`;
+
+        rows.forEach(row => {
+            if (row.getAttribute('data-date') === todayStr) {
+                row.classList.add('active-today');
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                row.classList.remove('active-today');
+            }
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', autoHighlightToday);
+
+    window.addEventListener('click', function() {
+        const menu = document.getElementById("myDropdown");
+        if (menu && menu.classList.contains('show')) {
+            menu.classList.remove('show');
+        }
+    });
+</script>
+
+</body>
+</html>
