@@ -19,149 +19,56 @@
             --primary-color: #00897b;
             --secondary-color: #2c3e50;
             --bg-color: #f4f7f6;
-            --active-row-bg: #c8e6c9; /* হাইলাইট রঙ */
-            --active-row-border: #2e7d32;
+            --active-row: #c8e6c9; /* হাইলাইট কালার */
+            --active-border: #2e7d32;
         }
 
         body { 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
             background-color: var(--bg-color); 
-            margin: 0;
-            padding: 10px;
+            margin: 0; padding: 10px;
         }
 
         .calendar-container { 
-            max-width: 600px; 
-            margin: 10px auto; 
-            background: white; 
-            border-radius: 20px; 
+            max-width: 600px; margin: 10px auto; 
+            background: white; border-radius: 20px; 
             box-shadow: 0 8px 25px rgba(0,0,0,0.1); 
-            overflow: hidden;
-            border: 1px solid #e0e0e0;
+            overflow: hidden; border: 1px solid #e0e0e0;
         }
 
         header {
             background: linear-gradient(135deg, #00897b, #004d40);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: relative;
+            color: white; padding: 20px; text-align: center; position: relative;
         }
 
-        /* Three Dot Menu */
-        .menu-container {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-        }
-
-        .dots-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 50%;
-            z-index: 1001;
-        }
+        .menu-container { position: absolute; top: 15px; right: 15px; }
+        .dots-btn { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 20px; cursor: pointer; padding: 8px 12px; border-radius: 50%; }
 
         .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 55px;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border-radius: 15px;
-            width: 260px;
-            z-index: 1000;
-            padding: 20px;
-            text-align: center;
-            animation: slideIn 0.3s ease;
+            display: none; position: absolute; right: 0; top: 55px;
+            background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 15px; width: 250px; z-index: 1000; padding: 20px; text-align: center;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .dropdown-menu img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-color); margin-bottom: 12px; }
 
-        .dropdown-menu img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary-color);
-            margin-bottom: 12px;
-        }
+        .note-section { background: #fff9c4; padding: 10px; border-radius: 10px; margin-top: 15px; border-left: 4px solid #fbc02d; font-size: 13px; color: #5d4037; text-align: left; }
 
-        .note-section {
-            background: #fff9c4;
-            padding: 10px;
-            border-radius: 10px;
-            margin-top: 15px;
-            border-left: 4px solid #fbc02d;
-            font-size: 13px;
-            color: #5d4037;
-            text-align: left;
-        }
+        .table-wrapper { overflow-x: auto; padding: 5px; }
+        table { width: 100%; border-collapse: collapse; min-width: 450px; }
+        th { background-color: #f8faf9; color: #444; padding: 15px 10px; border-bottom: 2px solid #ddd; font-size: 15px; }
+        td { padding: 12px 10px; text-align: center; border-bottom: 1px solid #eee; font-size: 15px; color: #333; }
 
-        /* Table Style */
-        .table-wrapper {
-            overflow-x: auto;
-            padding: 5px;
-        }
-
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            min-width: 450px;
-        }
-
-        th { 
-            background-color: #f8faf9; 
-            color: #444; 
-            padding: 15px 10px;
-            border-bottom: 2px solid #ddd;
-            font-size: 15px;
-        }
-
-        td { 
-            padding: 12px 10px; 
-            text-align: center; 
-            border-bottom: 1px solid #eee;
-            font-size: 15px;
-            color: #333;
-        }
-
-        /* প্রতিদিনের পুরো সারি হাইলাইট */
-        .active-today {
-            background-color: var(--active-row-bg) !important;
-            border-left: 6px solid var(--active-row-border);
+        /* পুরো রো হাইলাইট করার স্টাইল */
+        .today-active {
+            background-color: var(--active-row) !important;
+            border-left: 6px solid var(--active-border);
             font-weight: bold;
         }
 
-        .ramadan-no {
-            background: var(--secondary-color);
-            color: white;
-            width: 28px;
-            height: 28px;
-            display: inline-block;
-            line-height: 28px;
-            border-radius: 50%;
-            font-size: 13px;
-        }
-
+        .ramadan-no { background: var(--secondary-color); color: white; width: 28px; height: 28px; display: inline-block; line-height: 28px; border-radius: 50%; font-size: 13px; }
         .show { display: block !important; }
-
-        footer {
-            background: #fdfdfd;
-            padding: 15px;
-            text-align: center;
-            font-size: 14px;
-            color: #777;
-            border-top: 1px solid #eee;
-        }
+        footer { background: #fdfdfd; padding: 15px; text-align: center; font-size: 14px; color: #777; }
     </style>
 </head>
 <body>
@@ -169,31 +76,25 @@
 <div class="calendar-container">
     <header>
         <div class="menu-container">
-            <button class="dots-btn" onclick="toggleMenu(event)">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
+            <button class="dots-btn" onclick="toggleMenu(event)"><i class="fas fa-ellipsis-v"></i></button>
             <div id="myDropdown" class="dropdown-menu">
                 <img src="https://i.ibb.co/tTbMdYQH/10776.avif" alt="Developer Shuvo">
-                <h4 style="margin: 5px 0;">Developer Shuvo</h4>
-                <p style="font-size: 14px; color: #666; margin: 0;">Expert Web Developer</p>
+                <h4>Developer Shuvo</h4>
+                <p>Expert Web Developer</p>
                 <div class="note-section">
                     <strong>বিশেষ দ্রষ্টব্য:</strong> ২/৪ মিনিট ভুল হতে পারে, ভুল হলে ক্ষমার দৃষ্টিতে দেখবেন।
                 </div>
             </div>
         </div>
-        <h2 style="margin: 0; font-size: 24px;">রমজান সময়সূচি ২০২৬</h2>
-        <p style="margin: 8px 0 0 0; opacity: 0.9;">নাটোর জেলা (ঢাকার সময় +৫ মিনিট)</p>
+        <h2>রমজান সময়সূচি ২০২৬</h2>
+        <p>নাটোর জেলা (ঢাকার সময়ের সাথে +৫ মিনিট)</p>
     </header>
 
     <div class="table-wrapper">
         <table id="ramadanTable">
             <thead>
                 <tr>
-                    <th>রমজান</th>
-                    <th>তারিখ</th>
-                    <th>বার</th>
-                    <th>সেহরি</th>
-                    <th>ইফতার</th>
+                    <th>রমজান</th><th>তারিখ</th><th>বার</th><th>সেহরি</th><th>ইফতার</th>
                 </tr>
             </thead>
             <tbody>
@@ -230,56 +131,37 @@
             </tbody>
         </table>
     </div>
-    
-    <footer>
-        <p>© ২০২৬ | নাটোর রমজান ক্যালেন্ডার</p>
-    </footer>
+    <footer><p>© ২০২৬ | নাটোর রমজান ক্যালেন্ডার</p></footer>
 </div>
 
 <script>
-    // থ্রি-ডট মেনু কন্ট্রোল
-    function toggleMenu(e) {
-        e.stopPropagation();
-        document.getElementById("myDropdown").classList.toggle("show");
-    }
+    function toggleMenu(e) { e.stopPropagation(); document.getElementById("myDropdown").classList.toggle("show"); }
 
-    // অটো হাইলাইট ফাংশন
-    function autoHighlightToday() {
-        const rows = document.querySelectorAll('#ramadanTable tbody tr');
+    function highlightToday() {
         const today = new Date();
         const y = today.getFullYear();
         const m = String(today.getMonth() + 1).padStart(2, '0');
         const d = String(today.getDate()).padStart(2, '0');
         const todayStr = `${y}-${m}-${d}`;
 
+        const rows = document.querySelectorAll('#ramadanTable tbody tr');
         rows.forEach(row => {
             if (row.getAttribute('data-date') === todayStr) {
-                row.classList.add('active-today');
+                row.classList.add('today-active');
                 row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                row.classList.remove('active-today');
             }
         });
     }
 
-    // পেজ লোড হলে কাজ করবে
-    window.addEventListener('DOMContentLoaded', autoHighlightToday);
-
-    // বাইরে ক্লিক করলে মেনু বন্ধ হবে
-    window.addEventListener('click', function() {
+    window.addEventListener('DOMContentLoaded', highlightToday);
+    window.addEventListener('click', () => { 
         const menu = document.getElementById("myDropdown");
-        if (menu && menu.classList.contains('show')) {
-            menu.classList.remove('show');
-        }
+        if (menu.classList.contains('show')) menu.classList.remove('show');
     });
 
-    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js');
-        });
+        window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); });
     }
 </script>
-
 </body>
 </html>
