@@ -1,0 +1,20 @@
+{
+  "short_name": "রমজান ২০২৬",
+  "name": "রমজান সময়সূচি ২০২৬ - নাটোর",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/tTbMdYQH/10776.avif",
+      "sizes": "192x192",
+      "type": "image/avif"
+    },
+    {
+      "src": "https://i.ibb.co/tTbMdYQH/10776.avif",
+      "sizes": "512x512",
+      "type": "image/avif"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#00897b",
+  "background_color": "#ffffff"
+}
