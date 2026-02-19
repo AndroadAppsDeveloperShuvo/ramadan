@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="রমজান ২০২৬">
-    <link rel="apple-touch-icon" href="icon.png"> 
+    <link rel="apple-touch-icon" href="icon.png">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -19,7 +19,7 @@
             --primary-color: #00897b;
             --secondary-color: #2c3e50;
             --bg-color: #f4f7f6;
-            --active-row-bg: #c8e6c9;
+            --active-row-bg: #c8e6c9; /* হাইলাইট রঙ */
             --active-row-border: #2e7d32;
         }
 
@@ -48,6 +48,7 @@
             position: relative;
         }
 
+        /* Three Dot Menu */
         .menu-container {
             position: absolute;
             top: 15px;
@@ -105,6 +106,7 @@
             text-align: left;
         }
 
+        /* Table Style */
         .table-wrapper {
             overflow-x: auto;
             padding: 5px;
@@ -132,6 +134,7 @@
             color: #333;
         }
 
+        /* প্রতিদিনের পুরো সারি হাইলাইট */
         .active-today {
             background-color: var(--active-row-bg) !important;
             border-left: 6px solid var(--active-row-border);
@@ -170,8 +173,8 @@
                 <i class="fas fa-ellipsis-v"></i>
             </button>
             <div id="myDropdown" class="dropdown-menu">
-                <img src="profile.png" alt="Developer Shuvo">
-                <p style="font-size: 20px; color: #333; margin: 0; font-weight: bold;">Developer Shuvo</p>
+                <img src="https://i.ibb.co/tTbMdYQH/10776.avif" alt="Developer Shuvo">
+                <p style="font-size: 20px; color: #666; margin: 0;">𝓓eveloper 𝓼𝚂huvo</p>
                 <p style="font-size: 14px; color: #666; margin: 0;">Expert Web Developer</p>
                 <div class="note-section">
                     <strong>বিশেষ দ্রষ্টব্য:</strong> ২/৪ মিনিট ভুল হতে পারে, ভুল হলে ক্ষমার দৃষ্টিতে দেখবেন।
@@ -234,11 +237,13 @@
 </div>
 
 <script>
+    // থ্রি-ডট মেনু কন্ট্রোল
     function toggleMenu(e) {
         e.stopPropagation();
         document.getElementById("myDropdown").classList.toggle("show");
     }
 
+    // অটো হাইলাইট ফাংশন
     function autoHighlightToday() {
         const rows = document.querySelectorAll('#ramadanTable tbody tr');
         const today = new Date();
@@ -257,8 +262,10 @@
         });
     }
 
+    // পেজ লোড হলে কাজ করবে
     window.addEventListener('DOMContentLoaded', autoHighlightToday);
 
+    // বাইরে ক্লিক করলে মেনু বন্ধ হবে
     window.addEventListener('click', function() {
         const menu = document.getElementById("myDropdown");
         if (menu && menu.classList.contains('show')) {
@@ -266,6 +273,7 @@
         }
     });
 
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js');
