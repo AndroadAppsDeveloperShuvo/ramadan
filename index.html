@@ -23,39 +23,27 @@
     <style>
         :root { --color-primary: #00796B; }
         body { font-family: 'Noto Sans Bengali', sans-serif; -webkit-font-smoothing: antialiased; }
-        
-        /* Transition */
         body, .page, .bg-white, .bg-gray-50, .text-gray-900, .text-gray-500 { transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
-
         .page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; display: none; }
         .page-visible { display: block; animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .scrolling-text { overflow: hidden; white-space: nowrap; background: #E0F2F1; padding: 8px 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid var(--color-primary); }
         .dark .scrolling-text { background: #004D40; border-left-color: #4DB6AC; color: #E0F2F1; }
         .scrolling-text span { display: inline-block; padding-left: 100%; animation: scroll-left 15s linear infinite; color: var(--color-primary); font-weight: 600; }
         .dark .scrolling-text span { color: #80CBC4; }
         @keyframes scroll-left { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
-        
         #pdf-overlay { display: none; }
         .pdf-table th, .pdf-table td { border: 1px solid #ccc; padding: 8px; font-size: 13px; text-align: left; color: black; }
         .pdf-table th { background-color: #eee; font-weight: bold; }
-        
         details > summary { list-style: none; cursor: pointer; transition: 0.2s; }
         details > summary::-webkit-details-marker { display: none; }
         details[open] > summary { background-color: #E0F2F1; color: #00796B; }
         .dark details[open] > summary { background-color: #004D40; color: #80CBC4; }
-        
-        /* No Scrollbar Class for Filters */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
     <script>
-        tailwind.config = { 
-            darkMode: 'class',
-            theme: { extend: { colors: { primary: '#00796B' } } } 
-        }
-        // Theme Check
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#00796B' } } } }
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
@@ -115,19 +103,26 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400" id="current-date">আজকের তারিখ</p>
                 </div>
                 
-                <div class="relative">
-                    <button onclick="toggleNotifications()" class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-teal-700 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-gray-600 transition focus:outline-none">
-                        <span class="text-xl">🔔</span>
-                        <span id="notif-badge" class="hidden absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-white dark:border-gray-700 rounded-full animate-pulse"></span>
+                <div class="flex items-center gap-3">
+                    <button onclick="handleWeatherClick()" id="header-weather-btn" class="flex items-center justify-center gap-1.5 bg-teal-50 dark:bg-gray-700/50 px-3 py-1.5 rounded-full hover:bg-teal-100 dark:hover:bg-gray-600 transition shadow-sm border border-teal-100 dark:border-gray-600">
+                        <span id="header-weather-icon" class="text-base">📍</span>
+                        <span id="header-weather-temp" class="text-xs font-bold text-teal-800 dark:text-teal-300">এলাকা সেট</span>
                     </button>
 
-                    <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-72 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden origin-top-right transform transition-all">
-                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-700/50">
-                            <h3 class="font-bold text-gray-700 dark:text-gray-200 text-sm">নোটিফিকেশন</h3>
-                            <button onclick="clearNotifications()" class="text-xs text-teal-600 dark:text-teal-400 font-bold hover:underline">মুছে ফেলুন</button>
-                        </div>
-                        <div id="notif-list" class="max-h-64 overflow-y-auto">
+                    <div class="relative">
+                        <button onclick="toggleNotifications()" class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-teal-700 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-gray-600 transition focus:outline-none">
+                            <span class="text-xl">🔔</span>
+                            <span id="notif-badge" class="hidden absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-white dark:border-gray-700 rounded-full animate-pulse"></span>
+                        </button>
+
+                        <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-72 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden origin-top-right transform transition-all">
+                            <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-700/50">
+                                <h3 class="font-bold text-gray-700 dark:text-gray-200 text-sm">নোটিফিকেশন</h3>
+                                <button onclick="clearNotifications()" class="text-xs text-teal-600 dark:text-teal-400 font-bold hover:underline">মুছে ফেলুন</button>
                             </div>
+                            <div id="notif-list" class="max-h-64 overflow-y-auto">
+                                </div>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -167,7 +162,7 @@
                     <button onclick="document.getElementById('profileCard').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition"><span class="material-symbols-outlined">close</span></button>
                     <div class="flex flex-col items-center text-center">
                         <img src="https://i.ibb.co/NdSxJghH/1759806262489.png" alt="Profile" class="rounded-full w-24 h-24 mb-4 border-4 border-teal-100 p-1">
-                        <h2 class="text-xl font-bold mb-1 dark:text-white">DEVELOPER SHUVO</h2>
+                        <h2 class="text-xl font-bold mb-1 dark:text-white">MD SHUVO P.K</h2>
                         <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-2xl mt-2"><p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">এই অ্যাপটি তৈরি করেছে শুভ প্রামানিক!</p></div>
                     </div>
                 </div>
@@ -274,6 +269,37 @@
         <div id="add-shipment-button-container" class="fixed bottom-24 right-6 z-20"><button onclick="navigate('add-shipment-page')" class="w-14 h-14 rounded-full bg-teal-700 text-white shadow-xl flex items-center justify-center transform transition hover:scale-110 active:scale-95"><span class="material-symbols-outlined text-3xl">add</span></button></div>
 
         <nav class="absolute bottom-0 left-0 right-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700"><div class="flex h-16 items-center justify-around"><a href="#" onclick="navigateToTab('dashboard')" class="flex flex-col items-center gap-1 text-teal-700 dark:text-teal-400 nav-item" id="nav-dashboard"><span class="material-symbols-outlined">dashboard</span><span class="text-[10px] font-bold">ড্যাশবোর্ড</span></a><a href="#" onclick="navigateToTab('shipments-page')" class="flex flex-col items-center gap-1 text-gray-400 nav-item" id="nav-shipments-page"><span class="material-symbols-outlined">list_alt</span><span class="text-[10px] font-bold">চালান</span></a><a href="#" onclick="navigateToTab('medicines-page')" class="flex flex-col items-center gap-1 text-gray-400 nav-item" id="nav-medicines-page"><span class="material-symbols-outlined">vaccines</span><span class="text-[10px] font-bold">ওষুধ</span></a><a href="#" onclick="navigateToTab('settings-page')" class="flex flex-col items-center gap-1 text-gray-400 nav-item" id="nav-settings-page"><span class="material-symbols-outlined">settings</span><span class="text-[10px] font-bold">সেটিংস</span></a></div></nav>
+
+        <div id="location-search-modal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div class="bg-white dark:bg-gray-800 w-full max-w-sm rounded-3xl p-6 relative shadow-2xl">
+                <button onclick="document.getElementById('location-search-modal').classList.add('hidden')" class="absolute top-4 right-4 p-2 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-red-100 hover:text-red-500 transition"><span class="material-symbols-outlined dark:text-gray-300">close</span></button>
+                <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">এলাকা নির্বাচন করুন</h2>
+                <input type="text" id="location-search-input" onkeyup="searchWeatherLocation()" placeholder="আপনার জেলার নাম লিখুন (যেমন: Natore)..." class="w-full p-3 rounded-xl border bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white mb-2 focus:outline-none focus:border-teal-500">
+                <div id="location-search-results" class="max-h-48 overflow-y-auto space-y-2 mt-2"></div>
+            </div>
+        </div>
+
+        <div id="weather-forecast-modal" class="hidden fixed inset-0 z-[80] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4">
+            <div class="bg-gradient-to-b from-blue-400 to-blue-600 dark:from-gray-800 dark:to-gray-900 w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl p-6 relative shadow-2xl text-white animate-[slideUp_0.3s_ease-out]">
+                <button onclick="document.getElementById('weather-forecast-modal').classList.add('hidden')" class="absolute top-4 right-4 p-2 bg-white/20 rounded-full hover:bg-white/40 transition"><span class="material-symbols-outlined text-white">close</span></button>
+                <div class="text-center mb-6 mt-2">
+                    <h2 id="forecast-city-name" class="text-2xl font-bold tracking-wide">লোড হচ্ছে...</h2>
+                    <p id="forecast-current-temp" class="text-6xl font-light my-2">--°</p>
+                    <p id="forecast-current-desc" class="text-sm font-medium">--</p>
+                    <div class="flex justify-center gap-4 mt-1 text-xs text-white/90">
+                        <span id="forecast-high">H:--°</span>
+                        <span id="forecast-low">L:--°</span>
+                    </div>
+                </div>
+                <div class="bg-black/20 rounded-2xl p-4 backdrop-blur-md">
+                    <h3 class="text-xs font-bold uppercase tracking-wider mb-3 text-white/80 border-b border-white/20 pb-2 flex items-center gap-2"><span class="material-symbols-outlined text-sm">calendar_month</span> ৭ দিনের পূর্বাভাস</h3>
+                    <div id="forecast-days-list" class="space-y-3 max-h-[35vh] overflow-y-auto no-scrollbar">
+                        </div>
+                </div>
+                <div class="mt-4 text-center"><button onclick="openLocationSearch()" class="text-xs text-white/70 hover:text-white underline">এলাকা পরিবর্তন করুন</button></div>
+            </div>
+        </div>
+        
     </main>
     
     <div id="video-modal" class="hidden fixed inset-0 bg-black/95 z-[70] flex items-center justify-center p-4 backdrop-blur-md"><div class="bg-black w-full max-w-lg rounded-3xl overflow-hidden relative shadow-2xl border border-white/10"><button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 bg-white/10 hover:bg-red-600 text-white rounded-full p-2 backdrop-blur-md transition"><span class="material-symbols-outlined">close</span></button><div class="relative pb-[56.25%] h-0"><iframe id="youtube-frame" class="absolute top-0 left-0 w-full h-full" src="" frameborder="0" allowfullscreen></iframe></div></div></div>
@@ -281,7 +307,6 @@
     <div id="pdf-overlay" class="hidden"><div id="pdf-content" style="padding:30px;font-family:'Noto Sans Bengali';background:white;color:black;"><div style="text-align:center;border-bottom:2px solid #00796B;padding-bottom:10px;margin-bottom:20px;"><h1 style="font-size:24px;color:#00796B;">আমার হিসাব</h1><p>পোল্ট্রি খামার রিপোর্ট</p></div><table style="width:100%;margin-bottom:20px;"><tr><td><h2 id="pdf-shipment-name"></h2><p id="pdf-shipment-date"></p></td><td style="text-align:right;"><span id="pdf-chicken-count"></span></td></tr></table><div style="display:flex;margin-bottom:20px;border:1px solid #ddd;"><div style="flex:1;background:#e0f7fa;padding:10px;border-right:1px solid #ddd;">আয়<br><b id="pdf-total-income"></b></div><div style="flex:1;background:#ffebee;padding:10px;border-right:1px solid #ddd;">ব্যয়<br><b id="pdf-total-expense"></b></div><div style="flex:1;background:#f1f8e9;padding:10px;">লাভ<br><b id="pdf-net-profit"></b></div></div><table class="pdf-table" style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f2f2f2;"><th>তারিখ</th><th>বিবরণ</th><th>ধরন</th><th>পরিমাণ</th></tr></thead><tbody id="pdf-table-body"></tbody></table><div style="margin-top:30px;text-align:right;font-size:10px;">Dev - Shuvo</div></div></div>
 
     <script>
-        // --- CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyBD3Ev8Gg2yValARgfxeRlSwDWrdERmtKE",
             authDomain: "mypoltyfarm.firebaseapp.com",
@@ -295,7 +320,6 @@
         const db = firebase.database();
         const auth = firebase.auth();
 
-        // 2ND FIREBASE (For Medicines)
         const medicineConfig = {
             apiKey: "AIzaSyDkqjA1Io411uidSZBLbYJlYHWGVY36zc8",
             authDomain: "shuvo-all-tools.firebaseapp.com",
@@ -315,7 +339,6 @@
         let currentEntryId = null;
         let currentShipmentData = {};
 
-        // --- AUTH & THEME ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
@@ -341,31 +364,19 @@
             }
         }
 
-        // GOOGLE LOGIN
         function handleGoogleLogin() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider)
-                .then((result) => {
-                    showToast("স্বাগতম " + result.user.displayName);
-                }).catch((error) => {
-                    alert("সমস্যা হয়েছে: " + error.message);
-                });
+                .then((result) => showToast("স্বাগতম " + result.user.displayName))
+                .catch((error) => alert("সমস্যা হয়েছে: " + error.message));
         }
 
-        // FORGOT PASSWORD
         function handleForgotPassword() {
             const email = document.getElementById('login-email').value;
-            if (!email) {
-                alert("দয়া করে ইমেইল বক্সে আপনার ইমেইলটি লিখুন, তারপর আবার 'পাসওয়ার্ড ভুলে গেছেন' এ ক্লিক করুন।");
-                return;
-            }
+            if (!email) return alert("দয়া করে ইমেইল বক্সে আপনার ইমেইলটি লিখুন, তারপর আবার 'পাসওয়ার্ড ভুলে গেছেন' এ ক্লিক করুন।");
             auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    alert("আপনার ইমেইলে রিসেট লিংক পাঠানো হয়েছে! ইনবক্স বা স্প্যাম ফোল্ডার চেক করুন।");
-                })
-                .catch((error) => {
-                    alert("সমস্যা হয়েছে: " + error.message);
-                });
+                .then(() => alert("আপনার ইমেইলে রিসেট লিংক পাঠানো হয়েছে!"))
+                .catch((error) => alert("সমস্যা হয়েছে: " + error.message));
         }
 
         function handleLogin() { const e=document.getElementById('login-email').value,p=document.getElementById('login-pass').value; if(e&&p)auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); }
@@ -373,16 +384,29 @@
         function toggleAuthMode() { document.getElementById('login-form-container').classList.toggle('hidden'); document.getElementById('register-form-container').classList.toggle('hidden'); }
         function logoutUser() { auth.signOut(); }
 
-        // --- DATA LOADING ---
         function loadUserData() {
             if(!currentUser) return;
             const uid = currentUser.uid;
-            db.ref(`users/${uid}/shipments`).on('value', s => renderShipments(s.val()));
-            db.ref(`users/${uid}/due_list`).on('value', s => renderDue(s.val()));
-            medDb.ref('admin_scroll_text').on('value', s => document.getElementById('scrollText').innerText = s.val() || "কোনো আপডেট নেই");
+            const offlineShipments = localStorage.getItem('offline_shipments_' + uid);
+            if(offlineShipments) renderShipments(JSON.parse(offlineShipments));
+            const offlineDues = localStorage.getItem('offline_dues_' + uid);
+            if(offlineDues) renderDue(JSON.parse(offlineDues));
+            db.ref(`users/${uid}/shipments`).on('value', s => {
+                const data = s.val();
+                if(data) localStorage.setItem('offline_shipments_' + uid, JSON.stringify(data));
+                renderShipments(data);
+            });
+            db.ref(`users/${uid}/due_list`).on('value', s => {
+                const data = s.val();
+                if(data) localStorage.setItem('offline_dues_' + uid, JSON.stringify(data));
+                renderDue(data);
+            });
+            medDb.ref('admin_scroll_text').on('value', s => {
+                const el = document.getElementById('scrollText');
+                if(el) el.innerText = s.val() || "কোনো আপডেট নেই";
+            });
         }
 
-        // --- NAVIGATION ---
         function navigate(p) { document.querySelectorAll('.page').forEach(e=>e.classList.remove('page-visible')); document.getElementById(p).classList.add('page-visible'); pageHistory.push(p); document.getElementById('add-shipment-button-container').classList.toggle('hidden', !['dashboard','shipments-page'].includes(p)); }
         function goBack() { if(pageHistory.length>1) pageHistory.pop(); navigate(pageHistory[pageHistory.length-1]); pageHistory.pop(); }
         function navigateToTab(p) { pageHistory=[p]; navigate(p); document.querySelectorAll('.nav-item').forEach(e=>{ e.classList.remove('text-teal-700', 'dark:text-teal-400'); if(e.id===`nav-${p}`) e.classList.add('text-teal-700', 'dark:text-teal-400'); }); }
@@ -390,10 +414,49 @@
         function toggleMenu(id) { document.getElementById(id).classList.toggle('hidden'); }
         document.onclick = (e) => { if(!e.target.closest('.relative')) document.querySelectorAll('#dropdownMenu, [id^="opt-"]').forEach(el=>el.classList.add('hidden')); };
         
-        // --- CRUD ---
-        function saveShipment(e) { e.preventDefault(); if(!currentUser) return alert("লগইন নেই"); const d={name:document.getElementById('shipment-name').value, chickenCount:document.getElementById('shipment-chicken-count').value, startDate:document.getElementById('shipment-start-date').value}; db.ref(`users/${currentUser.uid}/shipments`).push(d).then(()=>{showToast("সফলভাবে সেভ হয়েছে"); goBack();}); }
-        function saveEntry(e) { e.preventDefault(); if(!currentUser) return; const d={amount:document.getElementById('entry-amount').value, date:document.getElementById('entry-date').value, note:document.getElementById('entry-note').value}; if(currentEntryType==='expense') d.type=document.getElementById('expense-type').value; else d.description=document.getElementById('income-description').value; const p=`users/${currentUser.uid}/shipments/${currentShipmentId}/${currentEntryType}s`; (currentEntryId?db.ref(`${p}/${currentEntryId}`).update(d):db.ref(p).push(d)).then(()=>{showToast("সেভ হয়েছে"); goBack();}); }
-        function saveDue(e) { e.preventDefault(); const id=document.getElementById('due-id').value; const d={name:document.getElementById('due-name').value, mobile:document.getElementById('due-mobile').value, amount:document.getElementById('due-amount').value, date:document.getElementById('due-date').value, note:document.getElementById('due-note').value}; (id?db.ref(`users/${currentUser.uid}/due_list/${id}`).update(d):db.ref(`users/${currentUser.uid}/due_list`).push(d)).then(()=>{showToast("সেভ হয়েছে"); goBack();}); }
+        // --- 💡 OFFLINE REMINDER SYSTEM IN SAVING ---
+        function saveShipment(e) { 
+            e.preventDefault(); 
+            if(!currentUser) return alert("লগইন নেই"); 
+            const d={name:document.getElementById('shipment-name').value, chickenCount:document.getElementById('shipment-chicken-count').value, startDate:document.getElementById('shipment-start-date').value}; 
+            
+            if (!navigator.onLine) showToast("এড হয়েছে, আপডেট হতে নেটওয়ার্ক প্রয়োজন ⚠️");
+            
+            db.ref(`users/${currentUser.uid}/shipments`).push(d).then(()=>{
+                if(navigator.onLine) showToast("সফলভাবে সেভ হয়েছে ✅"); 
+                goBack();
+            }); 
+        }
+
+        function saveEntry(e) { 
+            e.preventDefault(); 
+            if(!currentUser) return; 
+            const d={amount:document.getElementById('entry-amount').value, date:document.getElementById('entry-date').value, note:document.getElementById('entry-note').value}; 
+            if(currentEntryType==='expense') d.type=document.getElementById('expense-type').value; 
+            else d.description=document.getElementById('income-description').value; 
+            
+            if (!navigator.onLine) showToast("এড হয়েছে, আপডেট হতে নেটওয়ার্ক প্রয়োজন ⚠️");
+            
+            const p=`users/${currentUser.uid}/shipments/${currentShipmentId}/${currentEntryType}s`; 
+            (currentEntryId?db.ref(`${p}/${currentEntryId}`).update(d):db.ref(p).push(d)).then(()=>{
+                if(navigator.onLine) showToast("সেভ হয়েছে ✅"); 
+                goBack();
+            }); 
+        }
+
+        function saveDue(e) { 
+            e.preventDefault(); 
+            const id=document.getElementById('due-id').value; 
+            const d={name:document.getElementById('due-name').value, mobile:document.getElementById('due-mobile').value, amount:document.getElementById('due-amount').value, date:document.getElementById('due-date').value, note:document.getElementById('due-note').value}; 
+            
+            if (!navigator.onLine) showToast("এড হয়েছে, আপডেট হতে নেটওয়ার্ক প্রয়োজন ⚠️");
+            
+            (id?db.ref(`users/${currentUser.uid}/due_list/${id}`).update(d):db.ref(`users/${currentUser.uid}/due_list`).push(d)).then(()=>{
+                if(navigator.onLine) showToast("সেভ হয়েছে ✅"); 
+                goBack();
+            }); 
+        }
+
         function prepareEntryForm() { document.forms[1].reset(); currentEntryId=null; document.getElementById('entry-date').valueAsDate=new Date(); document.getElementById('entry-form-title').innerText=currentEntryType==='expense'?'নতুন খরচ':'নতুন আয়'; document.getElementById('expense-fields').classList.toggle('hidden', currentEntryType!=='expense'); document.getElementById('income-fields').classList.toggle('hidden', currentEntryType!=='income'); navigate('add-entry-page'); }
         function prepareDueForm() { document.forms[2].reset(); document.getElementById('due-id').value=''; document.getElementById('due-date').valueAsDate=new Date(); navigate('add-due-page'); }
         function editEntry(t,i) { db.ref(`users/${currentUser.uid}/shipments/${currentShipmentId}/${t}s/${i}`).once('value',s=>{ const d=s.val(); currentEntryId=i; document.getElementById('entry-amount').value=d.amount; document.getElementById('entry-date').value=d.date; document.getElementById('entry-note').value=d.note||''; if(t==='expense'){document.getElementById('expense-type').value=d.type;document.getElementById('expense-fields').classList.remove('hidden');document.getElementById('income-fields').classList.add('hidden');}else{document.getElementById('income-description').value=d.description;document.getElementById('expense-fields').classList.add('hidden');document.getElementById('income-fields').classList.remove('hidden');} navigate('add-entry-page'); }); }
@@ -401,11 +464,34 @@
         function deleteCurrentShipment() { if(confirm("মুছবেন?")) db.ref(`users/${currentUser.uid}/shipments/${currentShipmentId}`).remove().then(()=>navigate('dashboard')); }
         function deleteEntry(t,i) { if(confirm("মুছবেন?")) db.ref(`users/${currentUser.uid}/shipments/${currentShipmentId}/${t}s/${i}`).remove(); }
         function deleteDue(i) { if(confirm("মুছবেন?")) db.ref(`users/${currentUser.uid}/due_list/${i}`).remove(); }
-        function showToast(m) { const t=document.getElementById('toast'); t.innerText=m; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),2000); }
+        function showToast(m) { const t=document.getElementById('toast'); t.innerText=m; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),3000); }
         
         function renderShipments(data) { const list=document.getElementById('ongoing-shipments-list'), all=document.getElementById('all-shipments-list'); list.innerHTML=all.innerHTML=''; if(!data){ list.innerHTML="<p class='text-center text-gray-400 py-10 dark:text-gray-500'>কোনো চালান নেই</p>"; return; } let total=0; Object.keys(data).reverse().forEach(k => { total++; const h=`<div onclick="viewShipment('${k}')" class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm flex items-center gap-4 border border-gray-100 dark:border-gray-700 hover:shadow-md transition cursor-pointer"><div class="w-12 h-12 bg-teal-50 dark:bg-teal-900/30 rounded-full flex items-center justify-center text-2xl">🐔</div><div><h3 class="font-bold text-gray-800 dark:text-gray-100">${data[k].name}</h3><p class="text-xs text-gray-500 dark:text-gray-400">${data[k].startDate}</p></div></div>`; all.innerHTML+=h; if(list.children.length<3) list.innerHTML+=h; }); document.getElementById('dashboard-summary').innerHTML=`<div class="bg-gradient-to-r from-teal-600 to-teal-500 rounded-2xl p-6 text-white shadow-lg shadow-teal-200 dark:shadow-none"><p class="text-teal-100 text-sm font-medium">মোট চালান</p><h2 class="text-4xl font-bold mt-1">${total}</h2></div>`; }
         function renderDue(data) { const el=document.getElementById('due-list-container'); el.innerHTML=''; let t=0; if(data) Object.entries(data).reverse().forEach(([k,v])=>{ t+= +v.amount; el.innerHTML+=`<div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm flex justify-between items-start border border-gray-50 dark:border-gray-700"><div class="flex-grow"><h3 class="font-bold text-gray-800 dark:text-gray-100">${v.name}</h3><p class="text-xs text-gray-500 dark:text-gray-400">${v.mobile||''}</p><p class="text-xs text-gray-400 mt-1">${v.date}</p></div><div class="text-right"><p class="font-bold text-red-500 text-lg">৳${v.amount}</p><div class="relative mt-2"><button onclick="event.stopPropagation(); toggleMenu('due-opt-${k}')" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"><span class="material-symbols-outlined text-gray-400">more_vert</span></button><div id="due-opt-${k}" class="hidden absolute right-0 mt-1 w-32 bg-white dark:bg-gray-700 shadow-xl rounded-xl z-10 border dark:border-gray-600 overflow-hidden"><button onclick="editDue('${k}')" class="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 dark:text-white">এডিট</button><button onclick="deleteDue('${k}')" class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">ডিলিট</button></div></div></div></div>`; }); document.getElementById('total-due-amount').innerText = `৳${t.toLocaleString('bn-BD')}`; }
-        function viewShipment(id) { currentShipmentId = id; navigate('shipment-details-page'); db.ref(`users/${currentUser.uid}/shipments/${id}`).on('value', s => { if(!s.exists()) { goBack(); return; } const d = s.val(); currentShipmentData = d; document.getElementById('details-shipment-name').innerText = d.name; const exp = Object.values(d.expenses||{}), inc = Object.values(d.incomes||{}); const te = exp.reduce((a,b)=>a+(+b.amount),0), ti = inc.reduce((a,b)=>a+(+b.amount),0), p = ti-te; document.getElementById('details-summary-cards').innerHTML = `<div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700"><p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">লাভ / লস</p><p class="text-2xl font-bold mt-1 ${p>=0?'text-green-600':'text-red-500'}">৳${p.toLocaleString()}</p></div><div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700"><p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">মোট আয়</p><p class="text-2xl font-bold mt-1 text-teal-600 dark:text-teal-400">৳${ti.toLocaleString()}</p></div><div class="col-span-2 bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex justify-between items-center"><div><p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">মোট ব্যয়</p><p class="text-2xl font-bold mt-1 text-red-500">৳${te.toLocaleString()}</p></div></div>`; const row = (list, t) => Object.entries(list||{}).reverse().map(([k,v])=>`<div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm flex justify-between items-start border border-gray-50 dark:border-gray-700"><div><h4 class="font-bold text-gray-800 dark:text-gray-200">${t==='expense'?v.type:v.description}</h4><p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${v.date}</p>${v.note?`<p class="text-xs text-gray-400 mt-1 bg-gray-50 dark:bg-gray-700 inline-block px-2 py-1 rounded">📝 ${v.note}</p>`:''}</div><div class="text-right"><p class="font-bold text-gray-800 dark:text-gray-200">৳${v.amount}</p><div class="relative mt-2"><button onclick="event.stopPropagation(); toggleMenu('opt-${k}')" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"><span class="material-symbols-outlined text-gray-400">more_vert</span></button><div id="opt-${k}" class="hidden absolute right-0 mt-1 w-32 bg-white dark:bg-gray-700 shadow-xl rounded-xl z-10 border dark:border-gray-600 overflow-hidden"><button onclick="editEntry('${t}','${k}')" class="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 dark:text-white">এডিট</button><button onclick="deleteEntry('${t}','${k}')" class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">ডিলিট</button></div></div></div></div>`).join(''); document.getElementById('expense-list-container').innerHTML = row(d.expenses,'expense') || '<div class="text-center py-10 text-gray-400 dark:text-gray-500">খরচ নেই</div>'; document.getElementById('income-list-container').innerHTML = row(d.incomes,'income') || '<div class="text-center py-10 text-gray-400 dark:text-gray-500">আয় নেই</div>'; }); }
+        
+        function viewShipment(id) { 
+            currentShipmentId = id; 
+            navigate('shipment-details-page'); 
+            const renderUI = (d) => {
+                currentShipmentData = d; 
+                document.getElementById('details-shipment-name').innerText = d.name; 
+                const exp = Object.values(d.expenses||{}), inc = Object.values(d.incomes||{}); 
+                const te = exp.reduce((a,b)=>a+(+b.amount),0), ti = inc.reduce((a,b)=>a+(+b.amount),0), p = ti-te; 
+                document.getElementById('details-summary-cards').innerHTML = `<div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700"><p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">লাভ / লস</p><p class="text-2xl font-bold mt-1 ${p>=0?'text-green-600':'text-red-500'}">৳${p.toLocaleString()}</p></div><div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700"><p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">মোট আয়</p><p class="text-2xl font-bold mt-1 text-teal-600 dark:text-teal-400">৳${ti.toLocaleString()}</p></div><div class="col-span-2 bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex justify-between items-center"><div><p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">মোট ব্যয়</p><p class="text-2xl font-bold mt-1 text-red-500">৳${te.toLocaleString()}</p></div></div>`; 
+                const row = (list, t) => Object.entries(list||{}).reverse().map(([k,v])=>`<div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm flex justify-between items-start border border-gray-50 dark:border-gray-700"><div><h4 class="font-bold text-gray-800 dark:text-gray-200">${t==='expense'?v.type:v.description}</h4><p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${v.date}</p>${v.note?`<p class="text-xs text-gray-400 mt-1 bg-gray-50 dark:bg-gray-700 inline-block px-2 py-1 rounded">📝 ${v.note}</p>`:''}</div><div class="text-right"><p class="font-bold text-gray-800 dark:text-gray-200">৳${v.amount}</p><div class="relative mt-2"><button onclick="event.stopPropagation(); toggleMenu('opt-${k}')" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"><span class="material-symbols-outlined text-gray-400">more_vert</span></button><div id="opt-${k}" class="hidden absolute right-0 mt-1 w-32 bg-white dark:bg-gray-700 shadow-xl rounded-xl z-10 border dark:border-gray-600 overflow-hidden"><button onclick="editEntry('${t}','${k}')" class="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 dark:text-white">এডিট</button><button onclick="deleteEntry('${t}','${k}')" class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">ডিলিট</button></div></div></div></div>`).join(''); 
+                document.getElementById('expense-list-container').innerHTML = row(d.expenses,'expense') || '<div class="text-center py-10 text-gray-400 dark:text-gray-500">খরচ নেই</div>'; 
+                document.getElementById('income-list-container').innerHTML = row(d.incomes,'income') || '<div class="text-center py-10 text-gray-400 dark:text-gray-500">আয় নেই</div>';
+            };
+            const offlineData = localStorage.getItem('offline_shipments_' + currentUser.uid);
+            if (offlineData) {
+                const parsedData = JSON.parse(offlineData);
+                if (parsedData[id]) renderUI(parsedData[id]);
+            }
+            db.ref(`users/${currentUser.uid}/shipments/${id}`).on('value', s => { 
+                if(!s.exists()) return; 
+                renderUI(s.val());
+            }); 
+        }
 
         function openCategoryReport() {
             if (!currentShipmentData.expenses) { alert("কোনো খরচ নেই!"); return; }
@@ -420,7 +506,6 @@
             document.getElementById('category-modal').classList.remove('hidden');
         }
 
-        // --- NEW FCR LOGIC ---
         function calculateFCR() {
             const toEn = n => n.replace(/[০-৯]/g, d => "০১২৩৪৫৬৭৮৯".indexOf(d));
             const b = parseFloat(toEn(document.getElementById('fcr-bags').value)) || 0;
@@ -432,68 +517,185 @@
                 document.getElementById('fcr-result').classList.remove('hidden');
                 document.getElementById('fcr-value').innerText = f.toFixed(2);
                 document.getElementById('fcr-total-feed-display').innerText = `মোট খাবার: ${totalFeed} কেজি`;
-                
-                let msg = "";
-                if (f <= 1.49) {
-                    msg = "অসাধারণ (Excellent) 🤩";
-                } else if (f >= 1.50 && f <= 1.69) {
-                    msg = "ভালো/স্বাভাবিক (Good) 🙂";
-                } else if (f >= 1.70 && f <= 1.89) {
-                    msg = "গড়পড়তা (Average) 😐";
-                } else {
-                    msg = "মন্দ/লোকসান (Poor) 😟";
-                }
-
+                let msg = f <= 1.49 ? "অসাধারণ 🤩" : f <= 1.69 ? "ভালো 🙂" : f <= 1.89 ? "গড়পড়তা 😐" : "মন্দ 😟";
                 document.getElementById('fcr-status-title').innerText = msg;
-            } else { alert("দয়া করে সঠিক ওজন দিন"); }
+            } else alert("দয়া করে সঠিক ওজন দিন");
         }
 
         function sharePDF() { db.ref(`users/${currentUser.uid}/shipments/${currentShipmentId}`).once('value',s=>{ const d=s.val(); document.getElementById('pdf-shipment-name').innerText=d.name; document.getElementById('pdf-shipment-date').innerText=d.startDate; document.getElementById('pdf-chicken-count').innerText="মুরগি: "+d.chickenCount; let ti=0,te=0,h=''; const all=[...Object.values(d.expenses||{}).map(x=>({...x,t:'ব্যয়'})),...Object.values(d.incomes||{}).map(x=>({...x,t:'আয়'}))].sort((a,b)=>new Date(a.date)-new Date(b.date)); all.forEach(x=>{ if(x.t==='ব্যয়')te+=+x.amount;else ti+=+x.amount; h+=`<tr><td>${x.date}</td><td>${x.type||x.description}</td><td>${x.t}</td><td style="text-align:right">${x.amount}</td></tr>`; }); document.getElementById('pdf-total-income').innerText="৳"+ti; document.getElementById('pdf-total-expense').innerText="৳"+te; document.getElementById('pdf-net-profit').innerText="৳"+(ti-te); document.getElementById('pdf-table-body').innerHTML=h; document.getElementById('pdf-overlay').style.display='block'; html2pdf().from(document.getElementById('pdf-content')).save().then(()=>document.getElementById('pdf-overlay').style.display='none'); }); }
         
-        // --- MULTI-BIRD VIDEO LOGIC ---
         function openVideoModal() { 
             document.getElementById('video-modal').classList.remove('hidden'); 
-            
-            let videoUrl = "https://drive.google.com/file/d/1ErsItnwlAp3miAbUdC-KTNR3OnHQmm5l/preview"; // ডিফল্ট ব্রয়লার ভিডিও
-
-            // কোন মুরগির ট্যাব সিলেক্ট করা আছে তা চেক করা (medicines.js থেকে)
+            let v = "https://drive.google.com/file/d/1ErsItnwlAp3miAbUdC-KTNR3OnHQmm5l/preview"; 
             if (typeof currentBirdType !== 'undefined') {
-                if (currentBirdType === 'broiler') {
-                    videoUrl = "https://drive.google.com/file/d/1ErsItnwlAp3miAbUdC-KTNR3OnHQmm5l/preview"; 
-                } else if (currentBirdType === 'color_bird') {
-                    videoUrl = "https://drive.google.com/file/d/1jmpt5J-nsFFLiHfTAglke4UpF_uhBYLe/preview"; 
-                } else if (currentBirdType === 'sonali') {
-                    videoUrl = "আপনার_সোনালির_ভিডিও_লিংক"; 
-                } else if (currentBirdType === 'deshi') {
-                    videoUrl = "আপনার_দেশি_মুরগির_ভিডিও_লিংক"; 
-                }
+                if (currentBirdType === 'broiler') v = "https://drive.google.com/file/d/1ErsItnwlAp3miAbUdC-KTNR3OnHQmm5l/preview"; 
+                else if (currentBirdType === 'color_bird') v = "https://drive.google.com/file/d/1jmpt5J-nsFFLiHfTAglke4UpF_uhBYLe/preview"; 
             }
-
-            document.getElementById('youtube-frame').src = videoUrl; 
+            document.getElementById('youtube-frame').src = v; 
         }
-
         function closeVideoModal() { document.getElementById('video-modal').classList.add('hidden'); document.getElementById('youtube-frame').src=""; }
 
-        // Start
         navigateToTab('dashboard');
+
+        // ==========================================
+        // ⛅ WEATHER SYSTEM (OPEN-METEO)
+        // ==========================================
+        
+        const weatherCodeToEmoji = {
+            0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+            45: '🌫️', 48: '🌫️',
+            51: '🌧️', 53: '🌧️', 55: '🌧️',
+            61: '🌧️', 63: '🌧️', 65: '🌧️',
+            71: '❄️', 73: '❄️', 75: '❄️',
+            80: '🌦️', 81: '🌦️', 82: '🌦️',
+            95: '⛈️', 96: '⛈️', 99: '⛈️'
+        };
+
+        const weatherCodeToDesc = {
+            0: 'পরিষ্কার আকাশ', 1: 'প্রায় পরিষ্কার', 2: 'আংশিক মেঘলা', 3: 'মেঘলা',
+            45: 'কুয়াশা', 48: 'কুয়াশা',
+            51: 'হালকা গুড়িগুড়ি বৃষ্টি', 53: 'গুড়িগুড়ি বৃষ্টি', 55: 'ভারী গুড়িগুড়ি বৃষ্টি',
+            61: 'হালকা বৃষ্টি', 63: 'মাঝারি বৃষ্টি', 65: 'ভারী বৃষ্টি',
+            71: 'হালকা তুষার', 73: 'মাঝারি তুষার', 75: 'ভারী তুষার',
+            80: 'হালকা পশলা বৃষ্টি', 81: 'মাঝারি পশলা বৃষ্টি', 82: 'ভারী পশলা বৃষ্টি',
+            95: 'বজ্রঝড়', 96: 'বজ্রঝড় ও শিলাবৃষ্টি', 99: 'ভারী বজ্রঝড়'
+        };
+
+        function handleWeatherClick() {
+            const loc = localStorage.getItem('user_weather_loc');
+            if(loc) {
+                document.getElementById('weather-forecast-modal').classList.remove('hidden');
+                loadWeatherForecast(JSON.parse(loc));
+            } else {
+                openLocationSearch();
+            }
+        }
+
+        function openLocationSearch() {
+            document.getElementById('weather-forecast-modal').classList.add('hidden');
+            document.getElementById('location-search-modal').classList.remove('hidden');
+            document.getElementById('location-search-input').value = '';
+            document.getElementById('location-search-results').innerHTML = '';
+        }
+
+        let searchTimeout;
+        function searchWeatherLocation() {
+            clearTimeout(searchTimeout);
+            const query = document.getElementById('location-search-input').value;
+            if(query.length < 2) return;
+            
+            searchTimeout = setTimeout(() => {
+                document.getElementById('location-search-results').innerHTML = '<p class="text-center text-sm text-gray-500">খোঁজা হচ্ছে...</p>';
+                fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5&language=en&format=json`)
+                .then(res => res.json())
+                .then(data => {
+                    const resultsBox = document.getElementById('location-search-results');
+                    resultsBox.innerHTML = '';
+                    if(data.results && data.results.length > 0) {
+                        data.results.forEach(place => {
+                            const adminName = place.admin1 ? place.admin1 : place.country;
+                            resultsBox.innerHTML += `
+                                <div onclick="saveWeatherLocation('${place.name}', ${place.latitude}, ${place.longitude})" class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition border border-gray-200 dark:border-gray-600 text-sm dark:text-white flex justify-between items-center">
+                                    <span class="font-bold">${place.name}</span> 
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">${adminName}</span>
+                                </div>`;
+                        });
+                    } else {
+                        resultsBox.innerHTML = '<p class="text-center text-sm text-red-400">কোনো এলাকা পাওয়া যায়নি!</p>';
+                    }
+                }).catch(e => {
+                    console.log("Geocoding Error:", e);
+                    document.getElementById('location-search-results').innerHTML = '<p class="text-center text-sm text-red-400">ইন্টারনেট সংযোগ চেক করুন</p>';
+                });
+            }, 600);
+        }
+
+        function saveWeatherLocation(name, lat, lon) {
+            localStorage.setItem('user_weather_loc', JSON.stringify({name, lat, lon}));
+            document.getElementById('location-search-modal').classList.add('hidden');
+            updateHeaderWeather();
+            
+            // পপআপ খোলার জন্য
+            document.getElementById('weather-forecast-modal').classList.remove('hidden');
+            loadWeatherForecast({name, lat, lon});
+        }
+
+        function updateHeaderWeather() {
+            const locStr = localStorage.getItem('user_weather_loc');
+            if(!locStr) return;
+            const loc = JSON.parse(locStr);
+            
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current_weather=true&timezone=auto`)
+            .then(res => res.json())
+            .then(data => {
+                const temp = Math.round(data.current_weather.temperature);
+                const code = data.current_weather.weathercode;
+                const emoji = weatherCodeToEmoji[code] || '🌡️';
+                
+                document.getElementById('header-weather-icon').innerText = emoji;
+                document.getElementById('header-weather-temp').innerText = `${temp}°C`;
+            }).catch(e => console.log("Weather update error", e));
+        }
+
+        function loadWeatherForecast(loc) {
+            document.getElementById('forecast-city-name').innerText = loc.name;
+            document.getElementById('forecast-current-temp').innerText = '...';
+            document.getElementById('forecast-current-desc').innerText = 'লোড হচ্ছে...';
+            
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`)
+            .then(res => res.json())
+            .then(data => {
+                const current = data.current_weather;
+                const daily = data.daily;
+                
+                // আপডেট কারেন্ট 
+                document.getElementById('forecast-current-temp').innerText = `${Math.round(current.temperature)}°`;
+                document.getElementById('forecast-current-desc').innerText = weatherCodeToDesc[current.weathercode] || 'অজানা';
+                document.getElementById('forecast-high').innerText = `H:${Math.round(daily.temperature_2m_max[0])}°`;
+                document.getElementById('forecast-low').innerText = `L:${Math.round(daily.temperature_2m_min[0])}°`;
+                
+                // আপডেট ৭ দিনের লিস্ট
+                const daysBox = document.getElementById('forecast-days-list');
+                daysBox.innerHTML = '';
+                const weekDays = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি'];
+                
+                for(let i=1; i<7; i++) { 
+                    const dateObj = new Date(daily.time[i]);
+                    const dayName = weekDays[dateObj.getDay()];
+                    const emoji = weatherCodeToEmoji[daily.weathercode[i]] || '☁️';
+                    const min = Math.round(daily.temperature_2m_min[i]);
+                    const max = Math.round(daily.temperature_2m_max[i]);
+                    
+                    daysBox.innerHTML += `
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="w-12 font-medium">${dayName}</span>
+                            <span class="text-xl">${emoji}</span>
+                            <div class="flex gap-4 w-20 justify-end">
+                                <span class="text-white/60">${min}°</span>
+                                <span class="font-bold">${max}°</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).catch(e => console.log("Forecast fetch error", e));
+        }
+
+        // অ্যাপ লোড হলে অটো ওয়েদার আপডেট হবে
+        window.addEventListener('load', () => {
+            updateHeaderWeather();
+        });
     </script>
     <script src="notifications.js"></script>
     <script src="stock.js"></script>
     <script src="daily_report.js"></script>
+    <script src="medicines.js?v=11"></script>
     
-    <script src="medicines.js?v=2"></script>
     <script>
-        // অফলাইন Service Worker চালু করা
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').then(reg => {
-                    console.log('অফলাইন মোড চালু হয়েছে! 🚀');
-                }).catch(err => {
-                    console.log('অফলাইন মোডে সমস্যা:', err);
-                });
+                navigator.serviceWorker.register('sw.js');
             });
         }
     </script>
-
 </body>
 </html>
