@@ -19,19 +19,14 @@ function initMedicines() {
     const container = document.getElementById('medicineListContainer');
     if(container) container.innerHTML = `<div class="text-center py-10 opacity-50">লোড হচ্ছে...</div>`;
 
-    // 💡 ১. আগে অফলাইনের সেভ করা ওষুধের ডাটা লোড করবে (Try-Catch দিয়ে সুরক্ষিত)
+    // 💡 ১. আগে অফলাইনের সেভ করা ওষুধের ডাটা লোড করবে
     const offlineMeds = localStorage.getItem('offline_medicines_data');
     if (offlineMeds) {
-        try {
-            allMedicinesData = JSON.parse(offlineMeds);
-            renderFilteredMedicines();
-        } catch (error) {
-            console.error("Cache error fixed automatically.");
-            localStorage.removeItem('offline_medicines_data'); // করাপ্ট ডাটা মুছে ফেলবে
-        }
+        allMedicinesData = JSON.parse(offlineMeds);
+        renderFilteredMedicines();
     }
 
-    // 💡 ২. ইন্টারনেট থাকলে ফায়ারবেস থেকে লাইভ ডাটা এনে আপডেট করবে
+    // 💡 ২. ইন্টারনেট থাকলে ফায়ারবেস থেকে লাইভ ডাটা এনে আপডেট করবে এবং ফোনে সেভ করে রাখবে
     if (typeof medDb !== 'undefined') {
         medDb.ref('admin_medicines').on('value', snapshot => {
             const data = snapshot.val();
@@ -39,7 +34,6 @@ function initMedicines() {
             
             if (data) {
                 Object.values(data).forEach(item => {
-                    if (!item) return; // 🛡️ Null Safety: ফাঁকা ডাটা থাকলে স্কিপ করবে
                     item.internalBirdType = normalizeBirdType(item.birdType);
                     item.day = String(item.day || "1"); 
                     tempMeds.push(item);
@@ -135,4 +129,4 @@ function renderFilteredMedicines() {
     });
 }
 
-setTimeout(initMedicines, 500);
+setTimeout(initMedicines, 500); 
